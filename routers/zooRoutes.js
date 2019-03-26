@@ -71,5 +71,18 @@ router
       .catch(err =>
         res.status(500).json({ error: "Sorry we couldn't delete that entry" })
       );
+  })
+  .put((req, res) => {
+    db("zoos")
+      .where({ id: req.params.id })
+      .update(req.body)
+      .then(updated => {
+        if (updated === 0) {
+          return res
+            .status(404)
+            .json({ error: "Sorry, there is no zoo at that id" });
+        }
+        db("zoos").then(zoos => res.status(200).json(zoos));
+      });
   });
 module.exports = router;
